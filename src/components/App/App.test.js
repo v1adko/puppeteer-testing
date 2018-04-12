@@ -60,6 +60,10 @@ describe('on page load', () => {
     const listItems = await page.$$('[data-test-id="navbar-li"]');
 
     expect(navbar).toBe(true);
+
+    if (listItems.length !== 4) {
+      await page.screenshot({ path: 'navbar-fail.screen.png' });
+    }
     expect(listItems).toHaveLength(4);
   });
 
