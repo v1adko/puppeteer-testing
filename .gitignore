@@ -21,3 +21,4 @@ yarn-debug.log*
 yarn-error.log*
 
 *.test-screen.png
+*.diff-screen.png

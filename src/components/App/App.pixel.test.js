@@ -18,5 +18,5 @@ describe('screenshots are correct', () => {
   it('App', async () => {
     await makeScreenshot(page, 'App');
     await compareScreenshots('App');
-  });
+  }, 3000);
 });
