@@ -30,17 +30,26 @@ beforeAll(async () => {
     width: 500,
     height: 2400
   });
-  await page.goto('http://localhost:3000');
+
+  await page.setRequestInterception(true);
+  page.on('request', interceptedRequest => {
+    if (interceptedRequest.url().includes('swapi')) {
+      interceptedRequest.abort();
+    } else {
+      interceptedRequest.continue();
+    }
+  });
 
   page.on('console', c => logs.push(c.text()));
-  page.on('pageerror', e => errors.push(e.text()));
-
+  page.on('pageerror', e => errors.push(e.message || e.text()));
 
   iPhonePage = await browser.newPage();
   await iPhonePage.emulate(iPhone6);
-  await iPhonePage.goto('http://localhost:3000');
   iPhonePage.on('console', c => logs.push(c.text()));
   iPhonePage.on('pageerror', e => errors.push(e.text()));
+
+  await iPhonePage.goto('http://localhost:3000');
+  await page.goto('http://localhost:3000');
 });
 
 afterAll(() => {
@@ -124,12 +133,17 @@ describe('on page load', () => {
     });
 
     it('have no logs', () => {
-      // const filteredLogs = logs.filter(l => l.indexOf('Download the React DevTools') === -1);
-      expect(logs).toHaveLength(0);
+      const filteredLogs = logs.filter(l => l.indexOf('%cDownload the React DevTools') === -1);
+      expect(filteredLogs).toHaveLength(0);
     });
 
     it('has no errors', () => {
-      expect(errors).toHaveLength(0);
+      expect(errors).toHaveLength(1);
+    });
+
+    it('fails to get StarWars data', async () => {
+      const h3 = await page.$eval('[data-test-id="starWars"]', el => el.innerHTML);
+      expect(h3).toBe('The Dark Side is Winning');
     });
   });
 });
