@@ -19,9 +19,18 @@ class App extends Component {
     e.preventDefault();
     if (document.cookie.includes('JWT')) {
       this.setState({ complete: true });
+    } else {
+      const result = window.confirm('Must set cookie (click OK and submit again)');
+      if (result) {
+        this.setCookie('JWT', 'JWT');
+      }
     }
     document.cookie = `firstName=${this.state.firstName}`
   }
+
+  setCookie = (name, value) => {
+    document.cookie = `${name}=${value}`
+  };
 
   handleInput = (e) => {
     this.setState({ firstName: e.currentTarget.value });
