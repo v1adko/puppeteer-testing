@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import logo from '../../logo.svg';
+import Login from '../Login/Login';
+import SuccessMessage from '../SuccessMessage/SuccessMessage';
 import './App.css';
 
 class App extends Component {
+  state = { complete: false };
+
   render() {
     return (
       <div className="App">
@@ -21,6 +25,7 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
+        {this.state.complete ? (<SuccessMessage />) : (<Login />)}
       </div>
     );
   }
