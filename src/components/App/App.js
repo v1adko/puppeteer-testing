@@ -28,12 +28,12 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 data-test-id="h1" className="App-title">Welcome to React</h1>
-          <nav data-test-id="navbar" className='navbar' role="navigation">
+          <nav data-test-id="navbar" className='navbar'>
             <ul>
-              <li data-test-id="navbar-li" className="nav-li"><a href="#">Home</a></li>
-              <li data-test-id="navbar-li" className="nav-li"><a href="#">About</a></li>
-              <li data-test-id="navbar-li" className="nav-li"><a href="#">Skills</a></li>
-              <li data-test-id="navbar-li" className="nav-li"><a href="#">Works</a></li>
+              <li data-test-id="navbar-li" className="nav-li"><a href="#home">Home</a></li>
+              <li data-test-id="navbar-li" className="nav-li"><a href="#about">About</a></li>
+              <li data-test-id="navbar-li" className="nav-li"><a href="#skills">Skills</a></li>
+              <li data-test-id="navbar-li" className="nav-li"><a href="#works">Works</a></li>
             </ul>
           </nav>
         </header>

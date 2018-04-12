@@ -21,20 +21,26 @@ const isDebugging = () => {
 let browser;
 let page;
 let iPhonePage;
+let logs = [];
+let errors = [];
 beforeAll(async () => {
   browser = await puppeteer.launch(isDebugging());
   page = await browser.newPage();
-
-  await page.goto('http://localhost:3000');
-
-  page.setViewport({
+  await page.setViewport({
     width: 500,
     height: 2400
   });
+  await page.goto('http://localhost:3000');
+
+  page.on('console', c => logs.push(c.text()));
+  page.on('pageerror', e => errors.push(e.text()));
+
 
   iPhonePage = await browser.newPage();
   await iPhonePage.emulate(iPhone6);
   await iPhonePage.goto('http://localhost:3000');
+  iPhonePage.on('console', c => logs.push(c.text()));
+  iPhonePage.on('pageerror', e => errors.push(e.text()));
 });
 
 afterAll(() => {
@@ -111,6 +117,15 @@ describe('on page load', () => {
       const firstNameCookie = cookies.find(c => c.name === 'firstName' && c.value === user.firstName);
 
       expect(firstNameCookie).not.toBeUndefined();
+    });
+
+    it('have no logs', () => {
+      // const filteredLogs = logs.filter(l => l.indexOf('Download the React DevTools') === -1);
+      expect(logs).toHaveLength(0);
+    });
+
+    it('has no errors', () => {
+      expect(errors).toHaveLength(0);
     });
   });
 });
