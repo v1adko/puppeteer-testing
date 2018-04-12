@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`on page load h1 loads correctly 1`] = `"Welcome to <span>E2E</span> Testing with <a href=\\"https://github.com/facebook/jest\\">Jest</a> and <a href=\\"https://github.com/GoogleChrome/puppeteer\\">Puppeteer</a>"`;

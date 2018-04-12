@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const pixelmatch = require('pixelmatch');
 const iPhone = require('puppeteer/DeviceDescriptors')['iPhone 6'];
-const { compareScreenshots, makeScreenshot } = require('../../utils/diff-images')(__dirname);
+const { compareScreenshots, makeScreenshot } = require('../../../utils/diff-images')(__dirname);
 
 let browser;
 let page;
@@ -18,5 +18,5 @@ describe('screenshots are correct', () => {
   it('App', async () => {
     await makeScreenshot(page, 'App');
     await compareScreenshots('App');
-  }, 3000);
+  }, 15000);
 });

@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { PNG } = require('pngjs');
 
-const compareScreenshots = (file, dirname) => new Promise(resolve => {
+const compareScreenshots = (file, dirname) => new Promise((resolve, reject) => {
   const inputPathName = path.resolve(dirname, `${file}.screen.png`);
   const testPathName = path.resolve(dirname, `${file}.test-screen.png`);
   const img1 = fs.createReadStream(inputPathName).pipe(new PNG()).on('parsed', doneReading);
@@ -31,7 +31,8 @@ const compareScreenshots = (file, dirname) => new Promise(resolve => {
 
     if (numDiffPixels !== 0) {
       const diffPathName = path.resolve(dirname, `${file}.diff-screen.png`);
-      diff.pack().pipe(fs.createWriteStream(diffPathName)).on('finish', () => resolve());
+      const errorMessage = `Pixel test failed, found ${numDiffPixels} different pixels. Diff saved to "${file}.diff-screen.png"`;
+      diff.pack().pipe(fs.createWriteStream(diffPathName)).on('finish', () => reject(errorMessage));
     } else {
       expect(numDiffPixels).toBe(0);
       resolve();

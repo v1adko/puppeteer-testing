@@ -61,7 +61,7 @@ afterAll(() => {
 describe('on page load', () => {
   it('h1 loads correctly', async () => {
     const html = await page.$eval('[data-test-id="h1"]', el => el.innerHTML);
-    expect(html).toBe('Welcome to React');
+    expect(html).toMatchSnapshot();
   });
 
   it('navbar loads correctly', async () => {
