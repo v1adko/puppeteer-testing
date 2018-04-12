@@ -1,9 +1,17 @@
 const puppeteer = require('puppeteer');
+const faker = require('faker');
+
+const user = {
+  email: faker.internet.email(),
+  password: 'test',
+  firstName: faker.name.firstName(),
+  lastName: faker.name.lastName()
+}
 
 const isDebugging = () => {
   const debuggin_mode = {
     headless: false,
-    slowMo: 250,
+    slowMo: 50,
     devtools: true
   };
   return process.env.NODE_ENV === 'debug' ? debuggin_mode : {};
@@ -42,4 +50,25 @@ describe('on page load', () => {
     expect(navbar).toBe(true);
     expect(listItems).toHaveLength(4);
   });
+
+  it('login form works on desktop with keyboard', async () => {
+    const firstNameSelector = '[data-test-id="firstName"]';
+    await page.click(firstNameSelector)
+    await page.type(firstNameSelector, user.firstName);
+
+    const lastNameSelector = '[data-test-id="lastName"]'
+    await page.click(lastNameSelector);
+    await page.type(lastNameSelector, user.lastName);
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.type(user.email);
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.type(user.password);
+
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('Enter');
+
+    await page.waitForSelector('[data-test-id="success"');
+  }, 15000);
 });
