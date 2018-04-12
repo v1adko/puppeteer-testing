@@ -16,6 +16,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "axios": "^0.18.0",
     "faker": "^4.1.0",
     "jest": "^20.0.4",
     "pixelmatch": "^4.0.2",

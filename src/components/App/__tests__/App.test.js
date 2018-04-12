@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const iPhone6 = require('puppeteer/DeviceDescriptors')['iPhone 6']
 const faker = require('faker');
+const axios = require('axios');
 
 const user = {
   email: faker.internet.email(),
@@ -145,5 +146,29 @@ describe('on page load', () => {
       const h3 = await page.$eval('[data-test-id="starWars"]', el => el.innerHTML);
       expect(h3).toBe('The Dark Side is Winning');
     });
+  });
+
+  describe('Link checker', () => {
+    it('checks all links', async () => {
+      const links = await page.evaluate(() => {
+        const anchors = document.querySelectorAll('a');
+        return [].map.call(anchors, a => a.href);
+      });
+
+      const errorLinks = [];
+      for (const link of links) {
+        try {
+          const response = await page.goto(link);
+          const status = response.status();
+          if (status !== 200) {
+            throw new Error(`Non 200 status code, got - ${status}`);
+          }
+        } catch (err) {
+          errorLinks.push({ link, error: err.message });
+        }
+      }
+
+      expect(errorLinks.map(e => e.link)).toEqual(['https://broken.link/']);
+    }, 15000);
   });
 });

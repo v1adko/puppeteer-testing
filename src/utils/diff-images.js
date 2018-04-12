@@ -42,7 +42,7 @@ const compareScreenshots = (file, threshold = 0.1, dirname) => new Promise((reso
 
 const makeScreenshot = (page, file, dirname) => page.screenshot({ path: path.resolve(dirname, `${file}.test-screen.png`) });
 
-module.exports = (dirname) => ({
+exports = (dirname) => ({
   compareScreenshots: (file, threshold) => compareScreenshots(file, threshold, dirname),
   makeScreenshot: (page, file) => makeScreenshot(page, file, dirname)
 });
