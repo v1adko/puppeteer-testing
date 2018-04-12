@@ -28,7 +28,7 @@ beforeAll(async () => {
   page = await browser.newPage();
   await page.setViewport({
     width: 500,
-    height: 2400
+    height: 240
   });
 
   await page.setRequestInterception(true);
@@ -71,7 +71,7 @@ describe('on page load', () => {
     expect(navbar).toBe(true);
 
     if (listItems.length !== 4) {
-      await page.screenshot({ path: 'navbar-fail.screen.png' });
+      await page.screenshot({ path: 'navbar.fail.test-screen.png' });
     }
     expect(listItems).toHaveLength(4);
   });

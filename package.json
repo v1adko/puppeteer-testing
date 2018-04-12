@@ -11,12 +11,15 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
-    "debug": "NODE_ENV=debug yarn test",
+    "test:debug": "NODE_ENV=debug yarn test",
+    "test:pixel": "yarn test pixel",
     "eject": "react-scripts eject"
   },
   "devDependencies": {
     "faker": "^4.1.0",
     "jest": "^20.0.4",
+    "pixelmatch": "^4.0.2",
+    "pngjs": "^3.3.2",
     "puppeteer": "^1.2.0"
   }
 }
