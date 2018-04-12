@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { PNG } = require('pngjs');
 
-const compareScreenshots = (file, dirname) => new Promise((resolve, reject) => {
+const compareScreenshots = (file, threshold = 0.1, dirname) => new Promise((resolve, reject) => {
   const inputPathName = path.resolve(dirname, `${file}.screen.png`);
   const testPathName = path.resolve(dirname, `${file}.test-screen.png`);
   const img1 = fs.createReadStream(inputPathName).pipe(new PNG()).on('parsed', doneReading);
@@ -26,7 +26,7 @@ const compareScreenshots = (file, dirname) => new Promise((resolve, reject) => {
       diff.data,
       img1.width,
       img2.width,
-      { threshold: 0.1 }
+      { threshold }
     )
 
     if (numDiffPixels !== 0) {
@@ -43,6 +43,6 @@ const compareScreenshots = (file, dirname) => new Promise((resolve, reject) => {
 const makeScreenshot = (page, file, dirname) => page.screenshot({ path: path.resolve(dirname, `${file}.test-screen.png`) });
 
 module.exports = (dirname) => ({
-  compareScreenshots: (...params) => compareScreenshots(...params, dirname),
-  makeScreenshot: (...params) => makeScreenshot(...params, dirname)
+  compareScreenshots: (file, threshold) => compareScreenshots(file, threshold, dirname),
+  makeScreenshot: (page, file) => makeScreenshot(page, file, dirname)
 });

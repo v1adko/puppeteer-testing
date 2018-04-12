@@ -41,6 +41,7 @@ class App extends Component {
             </ul>
           </nav>
         </header>
+        {/* <p>BREAK THE TEST</p> */}
         <h3 data-test-id="starWars">{this.state.starWars.url ? 'Got StarWars Data' : 'The Dark Side is Winning'}</h3>
         {this.state.complete ? (<SuccessMessage />) : (<Login submit={this.handleSubmit} input={this.handleInput} />)}
       </div>
