@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const iPhone6 = require('puppeteer/DeviceDescriptors')['iPhone 6']
 const faker = require('faker');
 
 const user = {
@@ -70,5 +71,33 @@ describe('on page load', () => {
     await page.keyboard.press('Enter');
 
     await page.waitForSelector('[data-test-id="success"');
+  }, 15000);
+
+  it('login form works on iPhone 6', async () => {
+    const page2 = await browser.newPage();
+    await page2.emulate(iPhone6);
+    await page2.goto('http://localhost:3000');
+
+    const firstName = await page2.$('[data-test-id="firstName"]');
+    const lastName = await page2.$('[data-test-id="lastName"]');
+    const email = await page2.$('[data-test-id="email"]');
+    const password = await page2.$('[data-test-id="password"]');
+    const submit = await page2.$('[data-test-id="submit"]');
+
+    await firstName.tap();
+    await page2.keyboard.type(user.firstName);
+
+    await lastName.tap();
+    await lastName.type(user.lastName);
+
+    await email.tap();
+    await page2.keyboard.type(user.email);
+
+    await password.tap();
+    await page2.keyboard.type(user.password);
+
+    await submit.tap();
+
+    await page2.waitForSelector('[data-test-id="success"');
   }, 15000);
 });
