@@ -8,7 +8,15 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 data-test-id="h1" className="App-title">Welcome to React</h1>
+          <nav data-test-id="navbar" className='navbar' role="navigation">
+            <ul>
+              <li data-test-id="navbar-li" className="nav-li"><a href="#">Home</a></li>
+              <li data-test-id="navbar-li" className="nav-li"><a href="#">About</a></li>
+              <li data-test-id="navbar-li" className="nav-li"><a href="#">Skills</a></li>
+              <li data-test-id="navbar-li" className="nav-li"><a href="#">Works</a></li>
+            </ul>
+          </nav>
         </header>
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.

@@ -9,17 +9,37 @@ const isDebugging = () => {
   return process.env.NODE_ENV === 'debug' ? debuggin_mode : {};
 };
 
+let browser;
+let page;
+beforeAll(async () => {
+  browser = await puppeteer.launch(isDebugging());
+  page = await browser.newPage();
+
+  await page.goto('http://localhost:3000');
+
+  page.setViewport({
+    width: 500,
+    height: 2400
+  })
+});
+
+afterAll(() => {
+  if (isDebugging()) {
+    browser.close();
+  }
+})
+
 describe('on page load', () => {
   it('h1 loads correctly', async () => {
-    const browser = await puppeteer.launch(isDebugging());
-    const page = await browser.newPage();
+    const html = await page.$eval('[data-test-id="h1"]', el => el.innerHTML);
+    expect(html).toBe('Welcome to React');
+  });
 
-    page.emulate({
-      viewport: {
-        width: 500,
-        height: 2400
-      },
-      userAgent: ''
-    })
+  it('navbar loads correctly', async () => {
+    const navbar = await page.$eval('[data-test-id="navbar"]', el => !!el);
+    const listItems = await page.$$('[data-test-id="navbar-li"]');
+
+    expect(navbar).toBe(true);
+    expect(listItems).toHaveLength(4);
   });
 });
