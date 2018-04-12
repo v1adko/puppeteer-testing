@@ -20,6 +20,7 @@ const isDebugging = () => {
 
 let browser;
 let page;
+let iPhonePage;
 beforeAll(async () => {
   browser = await puppeteer.launch(isDebugging());
   page = await browser.newPage();
@@ -29,7 +30,11 @@ beforeAll(async () => {
   page.setViewport({
     width: 500,
     height: 2400
-  })
+  });
+
+  iPhonePage = await browser.newPage();
+  await iPhonePage.emulate(iPhone6);
+  await iPhonePage.goto('http://localhost:3000');
 });
 
 afterAll(() => {
@@ -67,37 +72,45 @@ describe('on page load', () => {
     await page.keyboard.press('Tab');
     await page.keyboard.type(user.password);
 
+    await iPhonePage.setCookie({ name: 'JWT', value: 'asd' });
+
     await page.keyboard.press('Tab');
     await page.keyboard.press('Enter');
 
     await page.waitForSelector('[data-test-id="success"');
   }, 15000);
 
-  it('login form works on iPhone 6', async () => {
-    const page2 = await browser.newPage();
-    await page2.emulate(iPhone6);
-    await page2.goto('http://localhost:3000');
+  describe('login form', () => {
+    it('login form works on iPhone 6', async () => {
+      const firstName = await iPhonePage.$('[data-test-id="firstName"]');
+      const lastName = await iPhonePage.$('[data-test-id="lastName"]');
+      const email = await iPhonePage.$('[data-test-id="email"]');
+      const password = await iPhonePage.$('[data-test-id="password"]');
+      const submit = await iPhonePage.$('[data-test-id="submit"]');
 
-    const firstName = await page2.$('[data-test-id="firstName"]');
-    const lastName = await page2.$('[data-test-id="lastName"]');
-    const email = await page2.$('[data-test-id="email"]');
-    const password = await page2.$('[data-test-id="password"]');
-    const submit = await page2.$('[data-test-id="submit"]');
+      await firstName.tap();
+      await iPhonePage.keyboard.type(user.firstName);
 
-    await firstName.tap();
-    await page2.keyboard.type(user.firstName);
+      await lastName.tap();
+      await lastName.type(user.lastName);
 
-    await lastName.tap();
-    await lastName.type(user.lastName);
+      await email.tap();
+      await iPhonePage.keyboard.type(user.email);
 
-    await email.tap();
-    await page2.keyboard.type(user.email);
+      await password.tap();
+      await iPhonePage.keyboard.type(user.password);
 
-    await password.tap();
-    await page2.keyboard.type(user.password);
+      await iPhonePage.setCookie({ name: 'JWT', value: 'asd' });
+      await submit.tap();
 
-    await submit.tap();
+      await iPhonePage.waitForSelector('[data-test-id="success"');
+    }, 15000);
 
-    await page2.waitForSelector('[data-test-id="success"');
-  }, 15000);
+    it('sets firstName cookie', async () => {
+      const cookies = await iPhonePage.cookies();
+      const firstNameCookie = cookies.find(c => c.name === 'firstName' && c.value === user.firstName);
+
+      expect(firstNameCookie).not.toBeUndefined();
+    });
+  });
 });

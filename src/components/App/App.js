@@ -5,9 +5,22 @@ import SuccessMessage from '../SuccessMessage/SuccessMessage';
 import './App.css';
 
 class App extends Component {
-  state = { complete: false };
+  state = {
+    complete: false,
+    firstName: ''
+  };
 
-  submit = () => this.setState({ complete: true });
+  handleSubmit = (e) => {
+    e.preventDefault();
+    if (document.cookie.includes('JWT')) {
+      this.setState({ complete: true });
+    }
+    document.cookie = `firstName=${this.state.firstName}`
+  }
+
+  handleInput = (e) => {
+    this.setState({ firstName: e.currentTarget.value });
+  }
 
   render() {
     return (
@@ -27,7 +40,7 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
-        {this.state.complete ? (<SuccessMessage />) : (<Login submit={this.submit} />)}
+        {this.state.complete ? (<SuccessMessage />) : (<Login submit={this.handleSubmit} input={this.handleInput} />)}
       </div>
     );
   }
